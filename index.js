@@ -11,7 +11,7 @@ const restify = require('restify');
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter, ConversationState, InputHints, MemoryStorage, UserState } = require('botbuilder');
 
-const { FlightBookingRecognizer } = require('./dialogs/flightBookingRecognizer');
+const { FlightBookingRecognizer } = require('./dialogs/botKotakiRecognizer');
 
 // This bot's main dialog.
 const { DialogAndWelcomeBot } = require('./bots/dialogAndWelcomeBot');
@@ -20,8 +20,10 @@ const { MainDialog } = require('./dialogs/mainDialog');
 // the bot's booking dialog
 const { BookingDialog } = require('./dialogs/bookingDialog');
 const { WeatherDialog } = require('./dialogs/weatherDialog');
+const { ActivationDialog } = require('./dialogs/ActivationDialog');
 const BOOKING_DIALOG = 'bookingDialog';
 const WEATHER_DIALOG = 'weatherDialog';
+const ACTIVATION_DIALOG = 'activationDialog';
 
 // Note: Ensure you have a .env file and include LuisAppId, LuisAPIKey and LuisAPIHostName.
 const ENV_FILE = path.join(__dirname, '.env');
@@ -50,9 +52,9 @@ adapter.onTurnError = async (context, error) => {
     );
 
     // Send a message to the user
-    let onTurnErrorMessage = 'The bot encounted an error or bug.';
+    let onTurnErrorMessage = 'O Bot encontrou um erro ou bug.';
     await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
-    onTurnErrorMessage = 'To continue to run this bot, please fix the bot source code.';
+    onTurnErrorMessage = 'Para continuar executando este bot, corrija o código-fonte do bot.';
     await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
     // Clear out state
     await conversationState.delete(context);
@@ -77,7 +79,8 @@ const luisRecognizer = new FlightBookingRecognizer(luisConfig);
 // Create the main dialog.
 const bookingDialog = new BookingDialog(BOOKING_DIALOG);
 const weatherDialog = new WeatherDialog(WEATHER_DIALOG);
-const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog);
+const activationDialog = new ActivationDialog(ACTIVATION_DIALOG);
+const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog, activationDialog);
 
 const bot = new DialogAndWelcomeBot(conversationState, userState, dialog);
 

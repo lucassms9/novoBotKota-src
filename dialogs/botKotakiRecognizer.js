@@ -23,6 +23,15 @@ class FlightBookingRecognizer {
         return await this.recognizer.recognize(context);
     }
 
+    getAtivaEntities(result){
+        console.log(result)
+        let ativa;
+        if (result.entities.$instance.Ativacao) {
+            ativa = result.entities.$instance.Ativacao[0].text;
+        }
+        return ativa;
+    }
+
     getPlaceEntities(result) {
         let place;
         if (result.entities.$instance.Place) {

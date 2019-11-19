@@ -49,8 +49,7 @@ class WeatherDialog extends CancelAndHelpDialog {
         }
         return await stepContext.next(weatherDetails.weatherDate);
     }
-   
-  
+    
     /**
      * Complete the interaction and end the dialog.
      */
