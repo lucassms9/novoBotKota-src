@@ -40,7 +40,7 @@ class ActivationDialog extends CancelAndHelpDialog {
     }
 
     /**
-     * Confirm the information the user has provided.
+     * Confirm the information the user has provided. 
      */
     async confirmStep(stepContext) {
         const activationDetails = stepContext.options;

@@ -24,7 +24,7 @@ class FlightBookingRecognizer {
     }
 
     getQuoteEntities(result) {
-        console.log(result);
+        // console.log(result);
         let suporte;
         if (result.entities.$instance.Cotacao) {
             suporte = result.entities.$instance.Cotacao[0].text;

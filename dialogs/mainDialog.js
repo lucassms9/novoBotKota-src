@@ -156,12 +156,11 @@ class MainDialog extends ComponentDialog {
         }
         case 'Cotacao_Produtos': {
             const quoteEntities = this.luisRecognizer.getQuoteEntities(luisResult);
-            quoteDetails.text = quoteEntities;
 
             console.log('LUIS extracted these about details:', JSON.stringify(quoteDetails));
 
             // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
-            return await stepContext.beginDialog('quoteDialog', quoteDetails);
+            return await stepContext.beginDialog('quoteDialog', []);
         }
         default: {
             // Catch all for unhandled intents
