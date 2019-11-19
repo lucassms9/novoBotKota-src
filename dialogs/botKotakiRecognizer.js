@@ -23,8 +23,24 @@ class FlightBookingRecognizer {
         return await this.recognizer.recognize(context);
     }
 
-    getAtivaEntities(result){
-        console.log(result)
+    getContactEntities(result) {
+        console.log(result);
+        let suporte;
+        if (result.entities.$instance.Suporte) {
+            suporte = result.entities.$instance.Suporte[0].text;
+        }
+        return suporte;
+    }
+    getAboutEntities(result) {
+        console.log(result);
+        let about;
+        if (result.entities.$instance.Sobre) {
+            about = result.entities.$instance.Sobre[0].text;
+        }
+        return about;
+    }
+
+    getAtivaEntities(result) {
         let ativa;
         if (result.entities.$instance.Ativacao) {
             ativa = result.entities.$instance.Ativacao[0].text;

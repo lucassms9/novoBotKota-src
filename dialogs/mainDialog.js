@@ -9,19 +9,23 @@ const { ComponentDialog, DialogSet, DialogTurnStatus, TextPrompt, WaterfallDialo
 const MAIN_WATERFALL_DIALOG = 'mainWaterfallDialog';
 
 class MainDialog extends ComponentDialog {
-    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog) {
+    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog) {
         super('MainDialog');
-        console.log(activationDialog)
+
         if (!luisRecognizer) throw new Error('[MainDialog]: Missing parameter \'luisRecognizer\' is required');
         this.luisRecognizer = luisRecognizer;
 
         if (!bookingDialog) throw new Error('[MainDialog]: Missing parameter \'bookingDialog\' is required');
         if (!activationDialog) throw new Error('[MainDialog]: Missing parameter \'activationDialog\' is required');
+        if (!aboutDialog) throw new Error('[MainDialog]: Missing parameter \'aboutDialog\' is required');
+        if (!contactDialog) throw new Error('[MainDialog]: Missing parameter \'contactDialog\' is required');
 
         // Define the main dialog and its related components.
         // This is a sample "book a flight" dialog.
         this.addDialog(new TextPrompt('TextPrompt'))
             .addDialog(activationDialog)
+            .addDialog(contactDialog)
+            .addDialog(aboutDialog)
             .addDialog(weatherDialog)
             .addDialog(bookingDialog)
             .addDialog(new WaterfallDialog(MAIN_WATERFALL_DIALOG, [
@@ -77,6 +81,8 @@ class MainDialog extends ComponentDialog {
     async actStep(stepContext) {
         const bookingDetails = {};
         const weatherDetails = {};
+        const aboutDetails = {};
+        const contactDetails = {};
         const activationDetails = {};
 
         if (!this.luisRecognizer.isConfigured) {
@@ -126,6 +132,24 @@ class MainDialog extends ComponentDialog {
 
             // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
             return await stepContext.beginDialog('activationDialog', activationDetails);
+        }
+        case 'Sobre_Kotaki': {
+            const aboutEntities = this.luisRecognizer.getAboutEntities(luisResult);
+            aboutDetails.text = aboutEntities;
+
+            console.log('LUIS extracted these about details:', JSON.stringify(aboutDetails));
+
+            // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
+            return await stepContext.beginDialog('aboutDialog', aboutDetails);
+        }
+        case 'Suporte_Kotaki': {
+            const contactEntities = this.luisRecognizer.getContactEntities(luisResult);
+            contactDetails.text = contactEntities;
+
+            console.log('LUIS extracted these about details:', JSON.stringify(contactDetails));
+
+            // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
+            return await stepContext.beginDialog('contactDialog', contactDetails);
         }
         default: {
             // Catch all for unhandled intents
