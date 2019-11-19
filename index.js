@@ -23,12 +23,14 @@ const { WeatherDialog } = require('./dialogs/weatherDialog');
 const { ActivationDialog } = require('./dialogs/ActivationDialog');
 const { AboutDialog } = require('./dialogs/aboutDialog');
 const { ContactDialog } = require('./dialogs/contactDialog');
+const { QuoteDialog } = require('./dialogs/quoteDialog');
 
 const BOOKING_DIALOG = 'bookingDialog';
 const WEATHER_DIALOG = 'weatherDialog';
 const ACTIVATION_DIALOG = 'activationDialog';
 const ABOUT_DIALOG = 'aboutDialog';
 const CONTACT_DIALOG = 'contactDialog';
+const QUOTE_DIALOG = 'quoteDialog';
 
 // Note: Ensure you have a .env file and include LuisAppId, LuisAPIKey and LuisAPIHostName.
 const ENV_FILE = path.join(__dirname, '.env');
@@ -87,7 +89,8 @@ const weatherDialog = new WeatherDialog(WEATHER_DIALOG);
 const activationDialog = new ActivationDialog(ACTIVATION_DIALOG);
 const aboutDialog = new AboutDialog(ABOUT_DIALOG);
 const contactDialog = new ContactDialog(CONTACT_DIALOG);
-const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog);
+const quoteDialog = new QuoteDialog(QUOTE_DIALOG);
+const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog);
 
 const bot = new DialogAndWelcomeBot(conversationState, userState, dialog);
 

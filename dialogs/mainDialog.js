@@ -9,7 +9,7 @@ const { ComponentDialog, DialogSet, DialogTurnStatus, TextPrompt, WaterfallDialo
 const MAIN_WATERFALL_DIALOG = 'mainWaterfallDialog';
 
 class MainDialog extends ComponentDialog {
-    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog) {
+    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog) {
         super('MainDialog');
 
         if (!luisRecognizer) throw new Error('[MainDialog]: Missing parameter \'luisRecognizer\' is required');
@@ -19,10 +19,12 @@ class MainDialog extends ComponentDialog {
         if (!activationDialog) throw new Error('[MainDialog]: Missing parameter \'activationDialog\' is required');
         if (!aboutDialog) throw new Error('[MainDialog]: Missing parameter \'aboutDialog\' is required');
         if (!contactDialog) throw new Error('[MainDialog]: Missing parameter \'contactDialog\' is required');
+        if (!quoteDialog) throw new Error('[MainDialog]: Missing parameter \'quoteDialog\' is required');
 
         // Define the main dialog and its related components.
         // This is a sample "book a flight" dialog.
         this.addDialog(new TextPrompt('TextPrompt'))
+            .addDialog(quoteDialog)
             .addDialog(activationDialog)
             .addDialog(contactDialog)
             .addDialog(aboutDialog)
@@ -84,6 +86,7 @@ class MainDialog extends ComponentDialog {
         const aboutDetails = {};
         const contactDetails = {};
         const activationDetails = {};
+        const quoteDetails = {};
 
         if (!this.luisRecognizer.isConfigured) {
             // LUIS is not configured, we just run the BookingDialog path.
@@ -151,6 +154,15 @@ class MainDialog extends ComponentDialog {
             // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
             return await stepContext.beginDialog('contactDialog', contactDetails);
         }
+        case 'Cotacao_Produtos': {
+            const quoteEntities = this.luisRecognizer.getQuoteEntities(luisResult);
+            quoteDetails.text = quoteEntities;
+
+            console.log('LUIS extracted these about details:', JSON.stringify(quoteDetails));
+
+            // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
+            return await stepContext.beginDialog('quoteDialog', quoteDetails);
+        }
         default: {
             // Catch all for unhandled intents
             const didntUnderstandMessageText = `Desculpe, eu não entendi isso. Por favor, tente perguntar de uma maneira diferente (intenção encontrada ${ LuisRecognizer.topIntent(luisResult) })`;
@@ -191,9 +203,9 @@ class MainDialog extends ComponentDialog {
         if (stepContext.result) {
             const result = stepContext.result;
             if (result.type === 'weather') {
-                const timeProperty = new TimexProperty(result.travelDate);
+                const timeProperty = new TimexProperty(result.weatherDate);
                 const travelDateMsg = timeProperty.toNaturalLanguage(new Date(Date.now()));
-                const msg = `The forecast in  ${ result.place } at ${ result.weatherDate }, its 100 graus.`;
+                const msg = `The forecast in  ${ result.place } at ${ travelDateMsg }, its 100 graus.`;
                 await stepContext.context.sendActivity(msg, msg, InputHints.IgnoringInput);
             }
         }

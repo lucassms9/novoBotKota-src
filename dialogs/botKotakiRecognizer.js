@@ -23,6 +23,14 @@ class FlightBookingRecognizer {
         return await this.recognizer.recognize(context);
     }
 
+    getQuoteEntities(result) {
+        console.log(result);
+        let suporte;
+        if (result.entities.$instance.Cotacao) {
+            suporte = result.entities.$instance.Cotacao[0].text;
+        }
+        return suporte;
+    }
     getContactEntities(result) {
         console.log(result);
         let suporte;
