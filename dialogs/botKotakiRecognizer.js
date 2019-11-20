@@ -32,7 +32,6 @@ class BotKotakiRecognizer {
         return suporte;
     }
     getContactEntities(result) {
-        console.log(result);
         let suporte;
         if (result.entities.$instance.Suporte) {
             suporte = result.entities.$instance.Suporte[0].text;
@@ -40,7 +39,6 @@ class BotKotakiRecognizer {
         return suporte;
     }
     getAboutEntities(result) {
-        console.log(result);
         let about;
         if (result.entities.$instance.Sobre) {
             about = result.entities.$instance.Sobre[0].text;

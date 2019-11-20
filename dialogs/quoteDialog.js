@@ -86,7 +86,6 @@ class QuoteDialog extends CancelAndHelpDialog {
      */
     async finalStep(stepContext) {
         const list = stepContext.values[this.productsSelected];
-        console.log(list);
         const messageText = 'Certo! vou enviar sua lista para nossos sistemas e em breve retornaremos com as melhorias';
         const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
         await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
