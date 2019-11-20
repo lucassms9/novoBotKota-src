@@ -10,6 +10,7 @@ class DialogAndWelcomeBot extends DialogBot {
 
         this.onMembersAdded(async (context, next) => {
             const membersAdded = context.activity.membersAdded;
+            console.log(membersAdded)
             for (let cnt = 0; cnt < membersAdded.length; cnt++) {
                 if (membersAdded[cnt].id !== context.activity.recipient.id) {
                     await context.sendActivity('Como posso te ajudar?');

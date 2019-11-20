@@ -21,6 +21,7 @@ class QuoteDialog extends CancelAndHelpDialog {
             .addDialog(new ConfirmPrompt(CONFIRM_PROMPT, false, 'pt-br'))
             .addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
                 this.quoteStep.bind(this),
+                this.qtdProductStep.bind(this),
                 this.confirmContinueStep.bind(this),
                 this.loopStep.bind(this),
                 this.finalStep.bind(this)
@@ -35,7 +36,7 @@ class QuoteDialog extends CancelAndHelpDialog {
     async quoteStep(stepContext) {
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.productsSelected] = list;
-        console.log(list)
+        console.log(list);
         // Create a prompt message.
         let messageText = '';
         if (list.length === 0) {
@@ -47,10 +48,19 @@ class QuoteDialog extends CancelAndHelpDialog {
         return await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
     }
 
-    async confirmContinueStep(stepContext) {
-        //reques para validar se o produto existe
-        const product = stepContext.result;
+    async qtdProductStep(stepContext) {
+        stepContext.values.productName = stepContext.result;
+        const messageText = 'insira a quantidade do produto';
+        const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
+        return await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
+    }
 
+    async confirmContinueStep(stepContext) {
+        // reques para validar se o produto existe
+        const product = {
+            name: stepContext.values.productName,
+            qtd: stepContext.result
+        };
         const list = stepContext.values[this.productsSelected];
         // console.log()
         list.push(product);
@@ -64,12 +74,11 @@ class QuoteDialog extends CancelAndHelpDialog {
         const result = stepContext.result;
         const list = stepContext.values[this.productsSelected];
         if (!result) {
-            //request para enviar os produtos para o back end
+            // request para enviar os produtos para o back end
             return await stepContext.next(stepContext);
         }
 
         return await stepContext.replaceDialog('quoteDialog', list);
-
     }
 
     /**
@@ -77,7 +86,7 @@ class QuoteDialog extends CancelAndHelpDialog {
      */
     async finalStep(stepContext) {
         const list = stepContext.values[this.productsSelected];
-        console.log(list)
+        console.log(list);
         const messageText = 'Certo! vou enviar sua lista para nossos sistemas e em breve retornaremos com as melhorias';
         const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
         await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
