@@ -37,7 +37,6 @@ class VouchersDialog extends CancelAndHelpDialog {
         const vouchers = [];
         const voucherList = [];
         const token = stepContext.context._activity.from.token;
-        console.log(token);
 
         // set the headers
         const config = {
@@ -47,7 +46,6 @@ class VouchersDialog extends CancelAndHelpDialog {
             }
         };
         const { data: { result } } = await api.get(`${SERVER_URL}/company/vouchers`, config);
-        console.log(result)
         result.vouchers.map((voucher) => {
             vouchers.push(`${voucher.redeemLocal}`);
             this.vouchersList.push(voucher);
@@ -71,18 +69,7 @@ class VouchersDialog extends CancelAndHelpDialog {
             return await stepContext.next();
         }
         const name_local = stepContext.result;
-        const messageText = `
-        **Orientações para resgate de seu crédito no ${name_local}** \n\n
-        1) Realize sua compra normalmente, em uma loja ${name_local} de sua preferência; \n\n
-        2) No momento de passar os produtos pelo caixa, basta avisar ao operador que utilizará um cupom digital de desconto;\n\n
-        3) Em seguida, é só fornecer o número do cupom e imediatamente o desconto é concedido.\n\n
-        Por favor esteja atento, pois esse crédito:\n\n
-        1) É pessoal e intransferível; somente você ou alguém de sua confiança deverá ter acesso a ele e realizar sua utilização;\n\n
-        2) Tem validade de 30 dias corridos ;\n\n
-        3) Somente poderá ser utilizado em compras que totalizem R$ 101,00 ou mais.\n\n
-        Caso tenha qualquer dúvida sobre como lidar corretamente com o cupom digital, por favor fale conosco pelo whatsapp (11) 95347-0016.\n\n
-        Obrigado pela parceria e boas compras para o seu estabelecimento!\n\n
-        `;
+        const messageText = `Orientações para resgate de seu crédito no ${name_local}** \n\n 1) Realize sua compra normalmente, em uma loja ${name_local} de sua preferência; \n\n2) No momento de passar os produtos pelo caixa, basta avisar ao operador que utilizará um cupom digital de desconto;\n\n3) Em seguida, é só fornecer o número do cupom e imediatamente o desconto é concedido.\n\nPor favor esteja atento, pois esse crédito:\n\n1) É pessoal e intransferível; somente você ou alguém de sua confiança deverá ter acesso a ele e realizar sua utilização;\n\n2) Tem validade de 30 dias corridos ;\n\n3) Somente poderá ser utilizado em compras que totalizem R$ 101,00 ou mais.\n\nCaso tenha qualquer dúvida sobre como lidar corretamente com o cupom digital, por favor fale conosco pelo whatsapp (11) 95347-0016.\n\nObrigado pela parceria e boas compras para o seu estabelecimento!\n\n`;
         const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
         await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
         return await stepContext.next();
