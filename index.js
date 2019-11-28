@@ -24,6 +24,7 @@ const { ActivationDialog } = require('./dialogs/ActivationDialog');
 const { AboutDialog } = require('./dialogs/aboutDialog');
 const { ContactDialog } = require('./dialogs/contactDialog');
 const { QuoteDialog } = require('./dialogs/quoteDialog');
+const { VouchersDialog } = require('./dialogs/vouchersDialog');
 
 const BOOKING_DIALOG = 'bookingDialog';
 const WEATHER_DIALOG = 'weatherDialog';
@@ -31,6 +32,7 @@ const ACTIVATION_DIALOG = 'activationDialog';
 const ABOUT_DIALOG = 'aboutDialog';
 const CONTACT_DIALOG = 'contactDialog';
 const QUOTE_DIALOG = 'quoteDialog';
+const VOUCHERS_DIALOG = 'vouchersDialog';
 
 // Note: Ensure you have a .env file and include LuisAppId, LuisAPIKey and LuisAPIHostName.
 const ENV_FILE = path.join(__dirname, '.env');
@@ -90,13 +92,14 @@ const activationDialog = new ActivationDialog(ACTIVATION_DIALOG);
 const aboutDialog = new AboutDialog(ABOUT_DIALOG);
 const contactDialog = new ContactDialog(CONTACT_DIALOG);
 const quoteDialog = new QuoteDialog(QUOTE_DIALOG);
-const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog);
+const vouchersDialog = new VouchersDialog(VOUCHERS_DIALOG);
+const dialog = new MainDialog(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog, vouchersDialog);
 
 const bot = new DialogAndWelcomeBot(conversationState, userState, dialog);
 
 // Create HTTP server
 const server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, function() {
+server.listen(process.env.port || process.env.PORT || 3977, function() {
     console.log(`\n${ server.name } listening to ${ server.url }`);
     console.log('\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator');
     console.log('\nTo talk to your bot, open the emulator select "Open Bot"');

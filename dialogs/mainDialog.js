@@ -9,7 +9,7 @@ const { ComponentDialog, DialogSet, DialogTurnStatus, TextPrompt, WaterfallDialo
 const MAIN_WATERFALL_DIALOG = 'mainWaterfallDialog';
 
 class MainDialog extends ComponentDialog {
-    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog) {
+    constructor(luisRecognizer, bookingDialog, weatherDialog, activationDialog, aboutDialog, contactDialog, quoteDialog, vouchersDialog) {
         super('MainDialog');
 
         if (!luisRecognizer) throw new Error('[MainDialog]: Missing parameter \'luisRecognizer\' is required');
@@ -20,11 +20,13 @@ class MainDialog extends ComponentDialog {
         if (!aboutDialog) throw new Error('[MainDialog]: Missing parameter \'aboutDialog\' is required');
         if (!contactDialog) throw new Error('[MainDialog]: Missing parameter \'contactDialog\' is required');
         if (!quoteDialog) throw new Error('[MainDialog]: Missing parameter \'quoteDialog\' is required');
+        if (!vouchersDialog) throw new Error('[MainDialog]: Missing parameter \'vouchersDialog\' is required');
 
         // Define the main dialog and its related components.
         // This is a sample "book a flight" dialog.
         this.addDialog(new TextPrompt('TextPrompt'))
             .addDialog(quoteDialog)
+            .addDialog(vouchersDialog)
             .addDialog(activationDialog)
             .addDialog(contactDialog)
             .addDialog(aboutDialog)
@@ -161,6 +163,12 @@ class MainDialog extends ComponentDialog {
 
             // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
             return await stepContext.beginDialog('quoteDialog', []);
+        }
+        case 'Vouchers': {
+            console.log('LUIS extracted these Vouchers details:');
+
+            // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
+            return await stepContext.beginDialog('vouchersDialog', []);
         }
         default: {
             // Catch all for unhandled intents
