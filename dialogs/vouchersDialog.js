@@ -36,7 +36,7 @@ class VouchersDialog extends CancelAndHelpDialog {
         // Create a prompt message.
         const vouchers = [];
         const voucherList = [];
-        const token = stepContext.context._activity.from.id;
+        const token = stepContext.context._activity.from.token;
         console.log(token);
 
         // set the headers
