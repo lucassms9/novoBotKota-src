@@ -97,7 +97,6 @@ class MainDialog extends ComponentDialog {
 
         // Call LUIS and gather any potential booking details. (Note the TurnContext has the response to the prompt)
         const luisResult = await this.luisRecognizer.executeLuisQuery(stepContext.context);
-        console.log(LuisRecognizer.topIntent(luisResult));
         switch (LuisRecognizer.topIntent(luisResult)) {
         case 'BookFlight': {
             // Extract the values for the composite entities from the LUIS result.
@@ -138,7 +137,7 @@ class MainDialog extends ComponentDialog {
             // Run the activationDialog passing in whatever details we have from the LUIS call, it will fill out the remainder.
             return await stepContext.beginDialog('activationDialog', activationDetails);
         }
-        case 'Sobre_Kotaki': {
+        case 'Qna_Kotaki': {
             const aboutEntities = this.luisRecognizer.getAboutEntities(luisResult);
             aboutDetails.text = aboutEntities;
 
@@ -172,7 +171,8 @@ class MainDialog extends ComponentDialog {
         }
         default: {
             // Catch all for unhandled intents
-            const didntUnderstandMessageText = `Desculpe, eu não entendi isso. Por favor, tente perguntar de uma maneira diferente (intenção encontrada ${ LuisRecognizer.topIntent(luisResult) })`;
+            // const didntUnderstandMessageText = `Desculpe, eu não entendi isso. Por favor, tente perguntar de uma maneira diferente (intenção encontrada ${ LuisRecognizer.topIntent(luisResult) })`;
+            const didntUnderstandMessageText = `Desculpe, eu não entendi isso.`;
             await stepContext.context.sendActivity(didntUnderstandMessageText, didntUnderstandMessageText, InputHints.IgnoringInput);
         }
         }

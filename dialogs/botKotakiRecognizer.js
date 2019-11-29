@@ -23,6 +23,14 @@ class BotKotakiRecognizer {
         return await this.recognizer.recognize(context);
     }
 
+    getHowWorkEntities(result) {
+        let howWork;
+        if (result.entities.$instance.Kotaki) {
+            howWork = result.entities.$instance.Kotaki[0].text;
+        }
+        return howWork;
+    }
+
     getQuoteEntities(result) {
         // console.log(result);
         let suporte;
