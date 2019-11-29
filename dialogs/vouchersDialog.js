@@ -37,6 +37,7 @@ class VouchersDialog extends CancelAndHelpDialog {
         const vouchers = [];
         const voucherList = [];
         const token = stepContext.context._activity.from.token;
+        // const token = stepContext.context._activity.from.id;
 
         // set the headers
         const config = {
@@ -46,18 +47,19 @@ class VouchersDialog extends CancelAndHelpDialog {
             }
         };
         const { data: { result } } = await api.get(`${SERVER_URL}/company/vouchers`, config);
-        result.vouchers.map((voucher) => {
-            vouchers.push(`${voucher.redeemLocal}`);
-            this.vouchersList.push(voucher);
-        })
+        if (result.vouchers.length > 0) {
+            result.vouchers.map((voucher) => {
+                vouchers.push(`${voucher.redeemLocal}`);
+                this.vouchersList.push(voucher);
+            });
+        }
 
         if (vouchers.length > 0) {
             let plu = (vouchers.length === 1) ? 'voucher disponível' : 'vouchers disponíveis';
-
             var reply = MessageFactory.suggestedActions(vouchers, `Voce tem ${vouchers.length} ${plu}, escolha para ler as instruções`);
             return await stepContext.prompt(TEXT_PROMPT, { prompt: reply });
         } else {
-            const messageText = 'Voce nao tem voucher disponiveis';
+            const messageText = 'Voce não tem vouchers disponíveis';
             const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
             await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
             return await stepContext.next(voucherList);
