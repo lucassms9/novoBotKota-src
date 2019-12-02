@@ -48,7 +48,7 @@ class QnaDialog extends CancelAndHelpDialog {
             break;
         }
         case 'Suporte_Kotaki': {
-            messageText = 'Gustavo Gushiken_ Comercial e Operações \n\n 11 98103 0214_ gustavo.gushiken@kotaki.digital';
+            messageText = 'Gustavo Gushiken Comercial e Operações \n\n 11 98103 0214_ gustavo.gushiken@kotaki.digital';
             break;
         }
         case 'Objetivo': {

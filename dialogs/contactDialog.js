@@ -30,7 +30,7 @@ class ContactDialog extends CancelAndHelpDialog {
         const aboutDetails = stepContext.options;
         aboutDetails.text = true;
         // request para buscar texto de about
-        const messageText = '**Contato Kotaki** \n\n Entre em contato por meio do telefone (99) 99999-9999.';
+        const messageText = 'Gustavo Gushiken Comercial e Operações \n\n 11 98103 0214_ gustavo.gushiken@kotaki.digital';
         const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
         await stepContext.prompt(TEXT_PROMPT, { prompt: msg });
         return await stepContext.next(aboutDetails.text);
